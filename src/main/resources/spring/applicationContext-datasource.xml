@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+  <context:component-scan base-package="com.kelan.message" annotation-config="true">
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+  </context:component-scan>
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="order" value="2"/>
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <property name="locations">
+      <list>
+        <value>classpath:datasource.properties</value>
+      </list>
+    </property>
+    <property name="fileEncoding" value="UTF-8"/>
+  </bean>
+  <!-- 车流量数据源 -->
+  <bean id="dataSource1" class="com.alibaba.druid.pool.DruidDataSource" scope="singleton">
+    <!-- 基本属性 url、user、password -->
+    <property name = "url" value = "${jdbc.url1}" />
+    <property name = "username" value = "${jdbc.user1}" />
+    <property name = "password" value = "${jdbc.password1}" />
+    <property name = "driverClassName" value = "${jdbc.driverClassName}" />
+    <property name = "filters" value = "${jdbc.filters}" />
+    <!-- 最大并发连接数 -->
+    <property name = "maxActive" value = "${jdbc.maxActive}" />
+    <!-- 初始化连接数量 -->
+    <property name = "initialSize" value = "${jdbc.initialSize}" />
+    <!-- 配置获取连接等待超时的时间 -->
+    <property name = "maxWait" value = "${jdbc.maxWait}" />
+    <!-- 最小空闲连接数 -->
+    <property name = "minIdle" value = "${jdbc.minIdle}" />
+    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+    <property name = "timeBetweenEvictionRunsMillis" value ="${jdbc.timeBetweenEvictionRunsMillis}" />
+    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+    <property name = "minEvictableIdleTimeMillis" value ="${jdbc.minEvictableIdleTimeMillis}" />
+    <property name = "validationQuery" value = "${jdbc.validationQuery}" />
+    <property name = "testWhileIdle" value = "${jdbc.testWhileIdle}" />
+    <property name = "testOnBorrow" value = "${jdbc.testOnBorrow}" />
+    <property name = "testOnReturn" value = "${jdbc.testOnReturn}" />
+    <property name = "maxOpenPreparedStatements" value ="${jdbc.maxOpenPreparedStatements}" />
+    <!-- 打开 removeAbandoned 功能 -->
+    <property name = "removeAbandoned" value = "${jdbc.removeAbandoned}" />
+    <!-- 1800 秒，也就是 30 分钟 -->
+    <property name = "removeAbandonedTimeout" value ="${jdbc.removeAbandonedTimeout}" />
+    <!-- 关闭 abanded 连接时输出错误日志 -->
+    <property name = "logAbandoned" value = "${jdbc.logAbandoned}" />
+  </bean>
+  <!-- GPS实时警员数据源 -->
+  <bean id="dataSource2" class="com.alibaba.druid.pool.DruidDataSource" scope="singleton">
+    <!-- 基本属性 url、user、password -->
+    <property name = "url" value = "${jdbc.url2}" />
+    <property name = "username" value = "${jdbc.user2}" />
+    <property name = "password" value = "${jdbc.password2}" />
+    <property name = "driverClassName" value = "${jdbc.driverClassName}" />
+    <property name = "filters" value = "${jdbc.filters}" />
+    <!-- 最大并发连接数 -->
+    <property name = "maxActive" value = "${jdbc.maxActive}" />
+    <!-- 初始化连接数量 -->
+    <property name = "initialSize" value = "${jdbc.initialSize}" />
+    <!-- 配置获取连接等待超时的时间 -->
+    <property name = "maxWait" value = "${jdbc.maxWait}" />
+    <!-- 最小空闲连接数 -->
+    <property name = "minIdle" value = "${jdbc.minIdle}" />
+    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+    <property name = "timeBetweenEvictionRunsMillis" value ="${jdbc.timeBetweenEvictionRunsMillis}" />
+    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+    <property name = "minEvictableIdleTimeMillis" value ="${jdbc.minEvictableIdleTimeMillis}" />
+    <property name = "validationQuery" value = "${jdbc.validationQuery}" />
+    <property name = "testWhileIdle" value = "${jdbc.testWhileIdle}" />
+    <property name = "testOnBorrow" value = "${jdbc.testOnBorrow}" />
+    <property name = "testOnReturn" value = "${jdbc.testOnReturn}" />
+    <property name = "maxOpenPreparedStatements" value ="${jdbc.maxOpenPreparedStatements}" />
+    <!-- 打开 removeAbandoned 功能 -->
+    <property name = "removeAbandoned" value = "${jdbc.removeAbandoned}" />
+    <!-- 1800 秒，也就是 30 分钟 -->
+    <property name = "removeAbandonedTimeout" value ="${jdbc.removeAbandonedTimeout}" />
+    <!-- 关闭 abanded 连接时输出错误日志 -->
+    <property name = "logAbandoned" value = "${jdbc.logAbandoned}" />
+  </bean>
+
+  <bean id="dataSource" class="com.kelan.message.datasource.RoutingDataSource">
+    <!-- 为targetDataSources注入两个数据源 -->
+    <property name="targetDataSources">
+      <map key-type="java.lang.String">
+        <entry key="ds1" value-ref="dataSource1"/>
+        <entry key="ds2" value-ref="dataSource2"/>
+      </map>
+    </property>
+    <!-- 为指定数据源RoutingDataSource注入默认的数据源-->
+    <property name="defaultTargetDataSource" ref="dataSource1"/>
+  </bean>
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="typeAliasesPackage" value="com.kelan.message.entity" />
+    <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    <property name="mapperLocations" value="classpath:mybatis/${jdbc.datatype}/*.xml" />
+  </bean>
+
+  <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.kelan.message.dao"/>
+  </bean>
+
+  <!-- 使用@Transactional进行声明式事务管理需要声明下面这行 -->
+  <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+  <!-- 事务管理 -->
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="rollbackOnCommitFailure" value="true"/>
+  </bean>
+  <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="insert*" propagation="REQUIRED"/>
+      <tx:method name="save*" propagation="REQUIRED"/>
+      <tx:method name="update*" propagation="REQUIRED"/>
+      <tx:method name="delete*" propagation="REQUIRED"/>
+      <tx:method name="remove*" propagation="REQUIRED"/>
+      <tx:method name="add*" propagation="REQUIRED"/>
+      <tx:method name="find*" propagation="SUPPORTS"/>
+      <tx:method name="get*" propagation="SUPPORTS"/>
+    </tx:attributes>
+  </tx:advice>
+  <aop:config proxy-target-class="true">
+    <aop:pointcut id="daoMethod" expression="execution(* com.kelan.message.*.service.*.*(..))"/>
+    <aop:advisor pointcut-ref="daoMethod" advice-ref="txAdvice"/>
+  </aop:config>
+</beans>
