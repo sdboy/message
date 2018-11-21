@@ -3,35 +3,46 @@
     "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
     "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
-
-  <classPathEntry location=""/>
+  <!--导入属性配置-->
+  <properties resource="datasource.properties" />
+  <classPathEntry location="${jdbc.driverLocation}"/>
 
   <context id="context" targetRuntime="MyBatis3">
     <commentGenerator>
-      <property name="suppressAllComments" value="false"/>
+      <property name="suppressAllComments" value="true"/>
       <property name="suppressDate" value="true"/>
     </commentGenerator>
 
-    <jdbcConnection userId="" password="" driverClass="" connectionURL=""/>
+    <jdbcConnection userId="${jdbc.user1}" password="${jdbc.password1}" driverClass="${jdbc.driverClassName}"
+                    connectionURL="${jdbc.url1}"/>
 
     <javaTypeResolver>
       <property name="forceBigDecimals" value="false"/>
     </javaTypeResolver>
 
-    <javaModelGenerator targetPackage="" targetProject=".">
+    <javaModelGenerator targetPackage="com.kelan.message.entity" targetProject="./src/main/java">
       <property name="enableSubPackages" value="false"/>
+      <property name="constructorBased" value="true"/>
       <property name="trimStrings" value="true"/>
+      <property name="immutable" value="false"/>
     </javaModelGenerator>
 
-    <sqlMapGenerator targetPackage="" targetProject=".">
+    <sqlMapGenerator targetPackage="mybatis/oracle" targetProject="./src/main/resources">
       <property name="enableSubPackages" value="false"/>
     </sqlMapGenerator>
 
-    <javaClientGenerator targetPackage="" type="XMLMAPPER" targetProject=".">
+    <javaClientGenerator targetPackage="com.kelan.message.dao" type="XMLMAPPER" targetProject="./src/main/java">
       <property name="enableSubPackages" value="false"/>
     </javaClientGenerator>
 
-    <table schema="" tableName="" enableCountByExample="false" enableDeleteByExample="false"
-           enableSelectByExample="false" enableUpdateByExample="false"/>
+    <table schema="C##KELAN" tableName="REGION_FLOW" domainObjectName="CarFlowRate" enableCountByExample="false"
+           enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+           selectByExampleQueryId="false">
+      <columnOverride column="SID" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <columnOverride column="HIS_FLOW" jdbcType="DOUBLE" javaType="java.lang.Integer" />
+      <columnOverride column="REAL_FLOW" jdbcType="DOUBLE" javaType="java.lang.Integer" />
+      <columnOverride column="CHANGE_RATE" jdbcType="DOUBLE" javaType="java.lang.Double" />
+    </table>
+
   </context>
 </generatorConfiguration>

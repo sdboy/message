@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kelan.message.dao.CarFlowRateMapper">
+  <resultMap id="BaseResultMap" type="com.kelan.message.entity.CarFlowRate">
+    <constructor>
+      <idArg column="SID" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="CN_DATE" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="REGION_NAME" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="HIS_FLOW" javaType="java.lang.Integer" jdbcType="DOUBLE" />
+      <arg column="REAL_FLOW" javaType="java.lang.Integer" jdbcType="DOUBLE" />
+      <arg column="CHANGE_RATE" javaType="java.lang.Double" jdbcType="DOUBLE" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    SID, CN_DATE, REGION_NAME, HIS_FLOW, REAL_FLOW, CHANGE_RATE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from C##KELAN.REGION_FLOW
+    where SID = #{sid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from C##KELAN.REGION_FLOW
+    where SID = #{sid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.kelan.message.entity.CarFlowRate">
+    insert into C##KELAN.REGION_FLOW (SID, CN_DATE, REGION_NAME, 
+      HIS_FLOW, REAL_FLOW, CHANGE_RATE
+      )
+    values (#{sid,jdbcType=BIGINT}, #{cnDate,jdbcType=TIMESTAMP}, #{regionName,jdbcType=VARCHAR}, 
+      #{hisFlow,jdbcType=DOUBLE}, #{realFlow,jdbcType=DOUBLE}, #{changeRate,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kelan.message.entity.CarFlowRate">
+    insert into C##KELAN.REGION_FLOW
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sid != null">
+        SID,
+      </if>
+      <if test="cnDate != null">
+        CN_DATE,
+      </if>
+      <if test="regionName != null">
+        REGION_NAME,
+      </if>
+      <if test="hisFlow != null">
+        HIS_FLOW,
+      </if>
+      <if test="realFlow != null">
+        REAL_FLOW,
+      </if>
+      <if test="changeRate != null">
+        CHANGE_RATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sid != null">
+        #{sid,jdbcType=BIGINT},
+      </if>
+      <if test="cnDate != null">
+        #{cnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="regionName != null">
+        #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="hisFlow != null">
+        #{hisFlow,jdbcType=DOUBLE},
+      </if>
+      <if test="realFlow != null">
+        #{realFlow,jdbcType=DOUBLE},
+      </if>
+      <if test="changeRate != null">
+        #{changeRate,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kelan.message.entity.CarFlowRate">
+    update C##KELAN.REGION_FLOW
+    <set>
+      <if test="cnDate != null">
+        CN_DATE = #{cnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="regionName != null">
+        REGION_NAME = #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="hisFlow != null">
+        HIS_FLOW = #{hisFlow,jdbcType=DOUBLE},
+      </if>
+      <if test="realFlow != null">
+        REAL_FLOW = #{realFlow,jdbcType=DOUBLE},
+      </if>
+      <if test="changeRate != null">
+        CHANGE_RATE = #{changeRate,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where SID = #{sid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kelan.message.entity.CarFlowRate">
+    update C##KELAN.REGION_FLOW
+    set CN_DATE = #{cnDate,jdbcType=TIMESTAMP},
+      REGION_NAME = #{regionName,jdbcType=VARCHAR},
+      HIS_FLOW = #{hisFlow,jdbcType=DOUBLE},
+      REAL_FLOW = #{realFlow,jdbcType=DOUBLE},
+      CHANGE_RATE = #{changeRate,jdbcType=DOUBLE}
+    where SID = #{sid,jdbcType=BIGINT}
+  </update>
+</mapper>

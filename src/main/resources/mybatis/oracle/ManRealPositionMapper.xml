@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kelan.message.dao.ManRealPositionMapper">
+  <resultMap id="BaseResultMap" type="com.kelan.message.entity.ManRealPosition">
+    <constructor>
+      <idArg column="SID" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="GPS_NO" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="CREATE_TIME" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="DEVICE_TYPE" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="DIRCTION" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="LATITUDE" javaType="java.lang.Double" jdbcType="DOUBLE" />
+      <arg column="LONGITUDE" javaType="java.lang.Double" jdbcType="DOUBLE" />
+      <arg column="ONLINE_STATUS" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="REPORT_TIME" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="SPEED" javaType="java.lang.Double" jdbcType="DOUBLE" />
+      <arg column="UUID" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    SID, GPS_NO, CREATE_TIME, DEVICE_TYPE, DIRCTION, LATITUDE, LONGITUDE, ONLINE_STATUS, 
+    REPORT_TIME, SPEED, UUID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from C##TEST.DUIJIE_INFO
+    where SID = #{sid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from C##TEST.DUIJIE_INFO
+    where SID = #{sid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.kelan.message.entity.ManRealPosition">
+    insert into C##TEST.DUIJIE_INFO (SID, GPS_NO, CREATE_TIME, 
+      DEVICE_TYPE, DIRCTION, LATITUDE, 
+      LONGITUDE, ONLINE_STATUS, REPORT_TIME, 
+      SPEED, UUID)
+    values (#{sid,jdbcType=BIGINT}, #{gpsNo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{deviceType,jdbcType=VARCHAR}, #{dirction,jdbcType=VARCHAR}, #{latitude,jdbcType=DOUBLE}, 
+      #{longitude,jdbcType=DOUBLE}, #{onlineStatus,jdbcType=VARCHAR}, #{reportTime,jdbcType=TIMESTAMP}, 
+      #{speed,jdbcType=DOUBLE}, #{uuid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kelan.message.entity.ManRealPosition">
+    insert into C##TEST.DUIJIE_INFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sid != null">
+        SID,
+      </if>
+      <if test="gpsNo != null">
+        GPS_NO,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="deviceType != null">
+        DEVICE_TYPE,
+      </if>
+      <if test="dirction != null">
+        DIRCTION,
+      </if>
+      <if test="latitude != null">
+        LATITUDE,
+      </if>
+      <if test="longitude != null">
+        LONGITUDE,
+      </if>
+      <if test="onlineStatus != null">
+        ONLINE_STATUS,
+      </if>
+      <if test="reportTime != null">
+        REPORT_TIME,
+      </if>
+      <if test="speed != null">
+        SPEED,
+      </if>
+      <if test="uuid != null">
+        UUID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sid != null">
+        #{sid,jdbcType=BIGINT},
+      </if>
+      <if test="gpsNo != null">
+        #{gpsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceType != null">
+        #{deviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="dirction != null">
+        #{dirction,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="onlineStatus != null">
+        #{onlineStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null">
+        #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="speed != null">
+        #{speed,jdbcType=DOUBLE},
+      </if>
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kelan.message.entity.ManRealPosition">
+    update C##TEST.DUIJIE_INFO
+    <set>
+      <if test="gpsNo != null">
+        GPS_NO = #{gpsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceType != null">
+        DEVICE_TYPE = #{deviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="dirction != null">
+        DIRCTION = #{dirction,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null">
+        LATITUDE = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null">
+        LONGITUDE = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="onlineStatus != null">
+        ONLINE_STATUS = #{onlineStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null">
+        REPORT_TIME = #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="speed != null">
+        SPEED = #{speed,jdbcType=DOUBLE},
+      </if>
+      <if test="uuid != null">
+        UUID = #{uuid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SID = #{sid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kelan.message.entity.ManRealPosition">
+    update C##TEST.DUIJIE_INFO
+    set GPS_NO = #{gpsNo,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      DEVICE_TYPE = #{deviceType,jdbcType=VARCHAR},
+      DIRCTION = #{dirction,jdbcType=VARCHAR},
+      LATITUDE = #{latitude,jdbcType=DOUBLE},
+      LONGITUDE = #{longitude,jdbcType=DOUBLE},
+      ONLINE_STATUS = #{onlineStatus,jdbcType=VARCHAR},
+      REPORT_TIME = #{reportTime,jdbcType=TIMESTAMP},
+      SPEED = #{speed,jdbcType=DOUBLE},
+      UUID = #{uuid,jdbcType=VARCHAR}
+    where SID = #{sid,jdbcType=BIGINT}
+  </update>
+</mapper>
