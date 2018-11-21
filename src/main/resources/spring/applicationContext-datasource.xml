@@ -127,4 +127,6 @@
     <aop:pointcut id="daoMethod" expression="execution(* com.kelan.message.*.service.*.*(..))"/>
     <aop:advisor pointcut-ref="daoMethod" advice-ref="txAdvice"/>
   </aop:config>
+  <!-- 开启AOP注解配置,强制采用CGLIB生成动态代理类(继承方法) -->
+  <aop:aspectj-autoproxy proxy-target-class="true"/>
 </beans>
