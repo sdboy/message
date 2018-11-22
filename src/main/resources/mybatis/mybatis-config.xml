@@ -26,7 +26,7 @@
   </settings>
 
   <typeAliases>
-    <package name="com.kelan.message" />
+    <package name="com.kelan.message.entity" />
   </typeAliases>
 
 </configuration>

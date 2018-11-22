@@ -21,8 +21,15 @@ public class QuartzServiceTest {
   private QuartzService quartzService;
 
   @Test
+  @Rollback(value = false)
   public void addJob() {
-
+    try{
+      Class cls = Class.forName("com.kelan.message.job.HelloWorld");
+      quartzService.addJob("job2", "jGroup2", "trigger2", "tGroup2",
+          cls, "10/5 * * * * ?");
+    }catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   @Ignore
