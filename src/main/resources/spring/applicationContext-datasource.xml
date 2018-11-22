@@ -18,12 +18,12 @@
     <property name="fileEncoding" value="UTF-8"/>
   </bean>
   <!-- 车流量数据源 -->
-  <bean id="dataSource1" class="com.alibaba.druid.pool.DruidDataSource" scope="singleton">
+  <bean id="dataSource1" class="com.alibaba.druid.pool.DruidDataSource" scope="singleton" destroy-method="close">
     <!-- 基本属性 url、user、password -->
     <property name = "url" value = "${jdbc.url1}" />
     <property name = "username" value = "${jdbc.user1}" />
     <property name = "password" value = "${jdbc.password1}" />
-    <property name = "driverClassName" value = "${jdbc.driverClassName}" />
+    <property name = "driverClassName" value = "${jdbc.driverClassName.oracle}" />
     <property name = "filters" value = "${jdbc.filters}" />
     <!-- 最大并发连接数 -->
     <property name = "maxActive" value = "${jdbc.maxActive}" />
@@ -37,7 +37,7 @@
     <property name = "timeBetweenEvictionRunsMillis" value ="${jdbc.timeBetweenEvictionRunsMillis}" />
     <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
     <property name = "minEvictableIdleTimeMillis" value ="${jdbc.minEvictableIdleTimeMillis}" />
-    <property name = "validationQuery" value = "${jdbc.validationQuery}" />
+    <property name = "validationQuery" value = "${jdbc.validationQuery.oracle}" />
     <property name = "testWhileIdle" value = "${jdbc.testWhileIdle}" />
     <property name = "testOnBorrow" value = "${jdbc.testOnBorrow}" />
     <property name = "testOnReturn" value = "${jdbc.testOnReturn}" />
@@ -50,12 +50,12 @@
     <property name = "logAbandoned" value = "${jdbc.logAbandoned}" />
   </bean>
   <!-- GPS实时警员数据源 -->
-  <bean id="dataSource2" class="com.alibaba.druid.pool.DruidDataSource" scope="singleton">
+  <bean id="dataSource2" class="com.alibaba.druid.pool.DruidDataSource" scope="singleton" destroy-method="close">
     <!-- 基本属性 url、user、password -->
     <property name = "url" value = "${jdbc.url2}" />
     <property name = "username" value = "${jdbc.user2}" />
     <property name = "password" value = "${jdbc.password2}" />
-    <property name = "driverClassName" value = "${jdbc.driverClassName}" />
+    <property name = "driverClassName" value = "${jdbc.driverClassName.oracle}" />
     <property name = "filters" value = "${jdbc.filters}" />
     <!-- 最大并发连接数 -->
     <property name = "maxActive" value = "${jdbc.maxActive}" />
@@ -69,7 +69,40 @@
     <property name = "timeBetweenEvictionRunsMillis" value ="${jdbc.timeBetweenEvictionRunsMillis}" />
     <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
     <property name = "minEvictableIdleTimeMillis" value ="${jdbc.minEvictableIdleTimeMillis}" />
-    <property name = "validationQuery" value = "${jdbc.validationQuery}" />
+    <property name = "validationQuery" value = "${jdbc.validationQuery.oracle}" />
+    <property name = "testWhileIdle" value = "${jdbc.testWhileIdle}" />
+    <property name = "testOnBorrow" value = "${jdbc.testOnBorrow}" />
+    <property name = "testOnReturn" value = "${jdbc.testOnReturn}" />
+    <property name = "maxOpenPreparedStatements" value ="${jdbc.maxOpenPreparedStatements}" />
+    <!-- 打开 removeAbandoned 功能 -->
+    <property name = "removeAbandoned" value = "${jdbc.removeAbandoned}" />
+    <!-- 1800 秒，也就是 30 分钟 -->
+    <property name = "removeAbandonedTimeout" value ="${jdbc.removeAbandonedTimeout}" />
+    <!-- 关闭 abanded 连接时输出错误日志 -->
+    <property name = "logAbandoned" value = "${jdbc.logAbandoned}" />
+  </bean>
+
+  <!-- 主数据源 -->
+  <bean id="dataSource3" class="com.alibaba.druid.pool.DruidDataSource" scope="singleton" destroy-method="close">
+    <!-- 基本属性 url、user、password -->
+    <property name = "url" value = "${jdbc.url3}" />
+    <property name = "username" value = "${jdbc.user3}" />
+    <property name = "password" value = "${jdbc.password3}" />
+    <property name = "driverClassName" value = "${jdbc.driverClassName.mysql}" />
+    <property name = "filters" value = "${jdbc.filters}" />
+    <!-- 最大并发连接数 -->
+    <property name = "maxActive" value = "${jdbc.maxActive}" />
+    <!-- 初始化连接数量 -->
+    <property name = "initialSize" value = "${jdbc.initialSize}" />
+    <!-- 配置获取连接等待超时的时间 -->
+    <property name = "maxWait" value = "${jdbc.maxWait}" />
+    <!-- 最小空闲连接数 -->
+    <property name = "minIdle" value = "${jdbc.minIdle}" />
+    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+    <property name = "timeBetweenEvictionRunsMillis" value ="${jdbc.timeBetweenEvictionRunsMillis}" />
+    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+    <property name = "minEvictableIdleTimeMillis" value ="${jdbc.minEvictableIdleTimeMillis}" />
+    <property name = "validationQuery" value = "${jdbc.validationQuery.mysql}" />
     <property name = "testWhileIdle" value = "${jdbc.testWhileIdle}" />
     <property name = "testOnBorrow" value = "${jdbc.testOnBorrow}" />
     <property name = "testOnReturn" value = "${jdbc.testOnReturn}" />
@@ -88,16 +121,22 @@
       <map key-type="java.lang.String">
         <entry key="ds1" value-ref="dataSource1"/>
         <entry key="ds2" value-ref="dataSource2"/>
+        <entry key="ds3" value-ref="dataSource3"/>
       </map>
     </property>
     <!-- 为指定数据源RoutingDataSource注入默认的数据源-->
-    <property name="defaultTargetDataSource" ref="dataSource1"/>
+    <property name="defaultTargetDataSource" ref="dataSource3"/>
   </bean>
   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
     <property name="dataSource" ref="dataSource" />
     <property name="typeAliasesPackage" value="com.kelan.message.entity" />
     <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
-    <property name="mapperLocations" value="classpath:mybatis/${jdbc.datatype}/*.xml" />
+    <property name="mapperLocations">
+      <array>
+        <value>classpath:mybatis/${jdbc.datatype.oracle}/*.xml</value>
+        <value>classpath:mybatis/${jdbc.datatype.mysql}/*.xml</value>
+      </array>
+    </property>
   </bean>
 
   <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
