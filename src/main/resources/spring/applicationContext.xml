@@ -11,4 +11,5 @@
 
   <import resource="applicationContext-datasource.xml"/>
   <import resource="spring-quartz.xml"/>
+  <bean class="com.kelan.message.configuration.PeopleFlowConfig" />
 </beans>
