@@ -1,6 +1,6 @@
 package com.kelan.message.configuration;
 
-import com.kelan.message.listener.FaceMessageListener;
+import com.kelan.message.listener.PeopleFlowMessageListener;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.commons.lang3.StringUtils;
@@ -28,99 +28,87 @@ public class PeopleFlowConfig {
   /**
    * mq地址
    */
-  @Value(value = "${FACE.url}")
+  @Value(value = "${PEOPLE.url}")
   private String url;
   /**
    * 消费者id
    */
-  @Value(value = "${FACE.clientId}")
+  @Value(value = "${PEOPLE.clientId}")
   private String clientId;
   /**
    * 会话数量
    */
-  @Value(value = "${FACE.sessionCacheSize}")
+  @Value(value = "${PEOPLE.sessionCacheSize}")
   private int sessionCacheSize;
   /**
    * 主题名
    */
-  @Value(value = "${FACE.topic1}")
-  private String topicId1;
-  /**
-   * 主题名
-   */
-  @Value(value = "${FACE.topic2}")
-  private String topicId2;
+  @Value(value = "${PEOPLE.topic}")
+  private String topic;
   /**
    * 重连间隔时间，单位毫秒
    */
-  @Value(value = "${FACE.interval}")
+  @Value(value = "${PEOPLE.interval}")
   private long interval;
   /**
    * 最大重连次数
    */
-  @Value(value = "${FACE.maxAttempts}")
+  @Value(value = "${PEOPLE.maxAttempts}")
   private long maxAttempts;
   /**
    * 接受消息超时，单位毫秒
    */
-  @Value(value = "${FACE.receiveTimeout}")
+  @Value(value = "${PEOPLE.receiveTimeout}")
   private long receiveTimeout;
   /**
    * 是否持久化，true为是，false为否
    */
-  @Value(value = "${FACE.subscriptionDurable}")
+  @Value(value = "${PEOPLE.subscriptionDurable}")
   private boolean subscriptionDurable;
   /**
    * 持久化名称
    */
-  @Value(value = "${FACE.durableSubscriptionName}")
+  @Value(value = "${PEOPLE.durableSubscriptionName}")
   private String durableSubscriptionName;
 
   @Bean
-  public ActiveMQConnectionFactory connectionFactory() {
+  public ActiveMQConnectionFactory peopleFlowConnectionFactory() {
     ActiveMQConnectionFactory mqConnectionFactory = new ActiveMQConnectionFactory();
     mqConnectionFactory.setBrokerURL(url);
     return mqConnectionFactory;
   }
 
   @Bean
-  public CachingConnectionFactory cachingConnectionFactory() {
+  public CachingConnectionFactory peopleFlowCachingConnectionFactory() {
     CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
     connectionFactory.setSessionCacheSize(sessionCacheSize);
-    connectionFactory.setTargetConnectionFactory(connectionFactory());
+    connectionFactory.setTargetConnectionFactory(peopleFlowConnectionFactory());
     connectionFactory.setClientId(clientId);
     return connectionFactory;
   }
 
   @Bean
-  public ActiveMQTopic topic1() {
+  public ActiveMQTopic peopleFlowCTopic() {
     ActiveMQTopic mqTopic = new ActiveMQTopic();
-    mqTopic.setPhysicalName(topicId1);
+    mqTopic.setPhysicalName(topic);
     return mqTopic;
   }
 
   @Bean
-  public ActiveMQTopic topic2() {
-    ActiveMQTopic mqTopic = new ActiveMQTopic();
-    mqTopic.setPhysicalName(topicId2);
-    return mqTopic;
+  public PeopleFlowMessageListener peopleFlowMessageListener() {
+    return new PeopleFlowMessageListener();
   }
 
   @Bean
-  public FaceMessageListener faceMessageListener() {
-    return new FaceMessageListener();
-  }
-
-  @Bean
-  public MessageListenerAdapter messageListenerAdapter() {
+  public MessageListenerAdapter peopleFlowMessageListenerAdapter() {
     MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter();
-    messageListenerAdapter.setDelegate(faceMessageListener());
+    messageListenerAdapter.setDelegate(peopleFlowMessageListener());
     messageListenerAdapter.setDefaultListenerMethod("onMessage");
     return messageListenerAdapter;
   }
 
   @Bean
-  public FixedBackOff fixedBackOff() {
+  public FixedBackOff peopleFlowCFixedBackOff() {
     FixedBackOff fixedBackOff = new FixedBackOff();
     fixedBackOff.setInterval(interval);
     fixedBackOff.setMaxAttempts(maxAttempts);
@@ -128,31 +116,13 @@ public class PeopleFlowConfig {
   }
 
   @Bean
-  public DefaultMessageListenerContainer topicMessageListenerAdapterContainer1() {
+  public DefaultMessageListenerContainer topicPeopleMessageListenerAdapterContainer() {
     DefaultMessageListenerContainer listenerContainer = new DefaultMessageListenerContainer();
-    listenerContainer.setConnectionFactory(cachingConnectionFactory());
-    listenerContainer.setDestination(topic1());
-    listenerContainer.setMessageListener(messageListenerAdapter());
+    listenerContainer.setConnectionFactory(peopleFlowCachingConnectionFactory());
+    listenerContainer.setDestination(peopleFlowCTopic());
+    listenerContainer.setMessageListener(peopleFlowMessageListenerAdapter());
     listenerContainer.setPubSubDomain(Boolean.TRUE);
-    listenerContainer.setBackOff(fixedBackOff());
-    listenerContainer.setClientId(clientId);
-    listenerContainer.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
-    listenerContainer.setReceiveTimeout(receiveTimeout);
-    if(subscriptionDurable && StringUtils.isNotBlank(durableSubscriptionName)) {
-      listenerContainer.setSubscriptionDurable(subscriptionDurable);
-      listenerContainer.setDurableSubscriptionName(durableSubscriptionName);
-    }
-    return listenerContainer;
-  }
-
-  @Bean
-  public DefaultMessageListenerContainer topicMessageListenerAdapterContainer2() {
-    DefaultMessageListenerContainer listenerContainer = new DefaultMessageListenerContainer();
-    listenerContainer.setConnectionFactory(cachingConnectionFactory());
-    listenerContainer.setDestination(topic2());
-    listenerContainer.setMessageListener(messageListenerAdapter());
-    listenerContainer.setPubSubDomain(Boolean.TRUE);
-    listenerContainer.setBackOff(fixedBackOff());
+    listenerContainer.setBackOff(peopleFlowCFixedBackOff());
     listenerContainer.setClientId(clientId);
     listenerContainer.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
     listenerContainer.setReceiveTimeout(receiveTimeout);

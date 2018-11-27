@@ -20,7 +20,7 @@ public class QuartzServiceTest {
   @Autowired
   private QuartzService quartzService;
 
-  @Test
+  @Ignore
   @Rollback(value = false)
   public void addJob() {
     try{

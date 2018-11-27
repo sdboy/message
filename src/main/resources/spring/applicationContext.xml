@@ -11,5 +11,6 @@
 
   <import resource="applicationContext-datasource.xml"/>
   <import resource="spring-quartz.xml"/>
-  <bean class="com.kelan.message.configuration.PeopleFlowConfig" />
+  <!--<bean class="com.kelan.message.configuration.PeopleFlowConfig" />-->
+  <!--<bean class="com.kelan.message.configuration.FaceMatchConfig" />-->
 </beans>

@@ -13,11 +13,13 @@ import javax.jms.TextMessage;
  *
  * @author JG
  * @version V1.0.0
- * @date 2018/11/26 14:58
+ * @date 2018/11/27 9:40
  * @see
  */
-public class FaceMessageListener implements MessageListener {
-  private Logger logger = LoggerFactory.getLogger(FaceMessageListener.class);
+public class PeopleFlowMessageListener implements MessageListener {
+
+  private Logger logger = LoggerFactory.getLogger(PeopleFlowMessageListener.class);
+
   @Override
   public void onMessage(Message message) {
     TextMessage tm = (TextMessage) message;
