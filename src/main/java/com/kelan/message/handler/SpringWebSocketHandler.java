@@ -8,8 +8,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p></p>
@@ -20,10 +20,10 @@ import java.util.Map;
  * @see
  */
 public class SpringWebSocketHandler  extends TextWebSocketHandler {
-  private static final Map<String, WebSocketSession> users;
+  private static final Map<String, WebSocketSession> USERS;
   private static Logger logger = LoggerFactory.getLogger(SpringWebSocketHandler.class);
   static {
-    users = new HashMap<>();
+    USERS = new ConcurrentHashMap<>();
   }
 
   public SpringWebSocketHandler() {
@@ -32,19 +32,20 @@ public class SpringWebSocketHandler  extends TextWebSocketHandler {
 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-    System.out.println("connect to the websocket success......当前数量:"+users.size());
-//    users.add(session);
-    //这块会实现自己业务，比如，当用户登录后，会把离线消息推送给用户
-    //TextMessage returnMessage = new TextMessage("你将收到的离线");
-    //session.sendMessage(returnMessage);
+    System.out.println("connect to the websocket success......当前数量:"+USERS.size());
+    String sessionId = (String) session.getAttributes().get("SESSION_ID");
+    USERS.put(sessionId, session);
+    // 这块会实现自己业务，比如，当用户登录后，会把离线消息推送给用户
+    // TextMessage returnMessage = new TextMessage("你将收到的离线");
+    // session.sendMessage(returnMessage);
   }
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
     logger.debug("websocket connection closed......");
-    String username= (String) session.getAttributes().get("WEBSOCKET_USERNAME");
-    System.out.println("用户"+username+"已退出！");
-    users.remove(session);
-    System.out.println("剩余在线用户"+users.size());
+    String sessionId = (String) session.getAttributes().get("SESSION_ID");
+    System.out.println("用户" + sessionId + "已退出！");
+    USERS.remove(sessionId);
+    System.out.println("剩余在线用户" + USERS.size());
   }
 
   @Override
@@ -54,9 +55,12 @@ public class SpringWebSocketHandler  extends TextWebSocketHandler {
 
   @Override
   public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-    if(session.isOpen()){session.close();}
+    if(session.isOpen()) {
+      session.close();
+    }
     logger.debug("websocket connection closed......");
-    users.remove(session);
+    String sessionId = (String) session.getAttributes().get("SESSION_ID");
+    USERS.remove(sessionId);
   }
 
   @Override
@@ -73,19 +77,21 @@ public class SpringWebSocketHandler  extends TextWebSocketHandler {
    * @since V1.0.0
    * @version V1.0.0
    */
-  public void sendMessageToUser(String userName, TextMessage message) {
-//    for (WebSocketSession user : users) {
-//      if (user.getAttributes().get("WEBSOCKET_USERNAME").equals(userName)) {
-//        try {
-//          if (user.isOpen()) {
-//            user.sendMessage(message);
-//          }
-//        } catch (IOException e) {
-//          e.printStackTrace();
-//        }
-//        break;
-//      }
-//    }
+  public static void sendMessageToUser(String sessionId, TextMessage message) {
+    for (Map.Entry<String, WebSocketSession> entry : USERS.entrySet()) {
+      WebSocketSession user = entry.getValue();
+      if (user.getAttributes().get("SESSION_ID").equals(sessionId)) {
+        try {
+          if (user.isOpen()) {
+            user.sendMessage(message);
+          }
+        } catch (IOException e) {
+          logger.error("给用户发送信息异常");
+          e.printStackTrace();
+        }
+        break;
+      }
+    }
   }
 
   /**
@@ -98,16 +104,18 @@ public class SpringWebSocketHandler  extends TextWebSocketHandler {
    * @since V1.0.0
    * @version V1.0.0
    */
-  public void sendMessageToUsers(TextMessage message) {
-//    for (WebSocketSession user : users) {
-//      try {
-//        if (user.isOpen()) {
-//          user.sendMessage(message);
-//        }
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
-//    }
+  public static void sendMessageToUsers(TextMessage message) {
+    for (Map.Entry<String, WebSocketSession> entry : USERS.entrySet()) {
+      try {
+        WebSocketSession user = entry.getValue();
+        if (user.isOpen()) {
+          user.sendMessage(message);
+        }
+      } catch (IOException e) {
+        logger.error("给用户发送信息失败");
+        e.printStackTrace();
+      }
+    }
   }
 
 }
