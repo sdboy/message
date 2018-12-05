@@ -20,7 +20,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
  * @date 2018/11/27 15:06
  * @see
  */
-//@Configuration
+@Configuration
 @EnableWebMvc
 @EnableWebSocket
 public class WebSocketConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {

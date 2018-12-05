@@ -35,9 +35,8 @@ public class SpringWebSocketHandler  extends TextWebSocketHandler {
     System.out.println("connect to the websocket success......当前数量:"+USERS.size());
     String sessionId = (String) session.getAttributes().get("SESSION_ID");
     USERS.put(sessionId, session);
-    // 这块会实现自己业务，比如，当用户登录后，会把离线消息推送给用户
-    // TextMessage returnMessage = new TextMessage("你将收到的离线");
-    // session.sendMessage(returnMessage);
+     TextMessage returnMessage = new TextMessage("登录成功");
+     session.sendMessage(returnMessage);
   }
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {

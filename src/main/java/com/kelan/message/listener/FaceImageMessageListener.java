@@ -1,5 +1,6 @@
 package com.kelan.message.listener;
 
+import com.kelan.message.handler.SpringWebSocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +24,13 @@ public class FaceImageMessageListener implements MessageListener {
     TextMessage tm = (TextMessage) message;
     try {
       String text = tm.getText();
+      org.springframework.web.socket.TextMessage stm = new org.springframework.web.socket.TextMessage(text);
       System.out.println(text);
+      SpringWebSocketHandler.sendMessageToUsers(stm);
     }catch (JMSException e) {
       logger.error(e.getMessage());
     }
   }
+
+
 }

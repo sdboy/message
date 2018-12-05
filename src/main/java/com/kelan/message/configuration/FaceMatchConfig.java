@@ -23,7 +23,7 @@ import javax.jms.Session;
  * @date 2018/11/27 9:21
  * @see
  */
-//@Configuration
+@Configuration
 public class FaceMatchConfig {
   /**
    * mq地址
