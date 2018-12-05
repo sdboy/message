@@ -15,9 +15,11 @@ import java.util.Date;
  * @see
  */
 public class HelloWorld implements Job {
+  private static int num = 0;
 
   @Override
   public void execute(JobExecutionContext arg0) throws JobExecutionException {
-    System.out.println("----hello world---" + new Date());
+    num ++;
+    System.out.println(num + "----hello world---" + new Date());
   }
 }

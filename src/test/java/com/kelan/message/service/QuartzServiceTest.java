@@ -40,12 +40,16 @@ public class QuartzServiceTest {
   public void modifyJobTime1() {
   }
 
-  @Ignore
+  @Test
+  @Rollback(value = false)
   public void pauseJob() {
+    quartzService.pauseJob("job2", "jGroup2");
   }
 
-  @Ignore
+  @Test
+  @Rollback(value = false)
   public void resumeJob() {
+    quartzService.resumeJob("job2", "jGroup2");
   }
 
   @Ignore

@@ -33,7 +33,7 @@ public class SpringWebSocketHandler  extends TextWebSocketHandler {
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     System.out.println("connect to the websocket success......当前数量:"+users.size());
-    users.add(session);
+//    users.add(session);
     //这块会实现自己业务，比如，当用户登录后，会把离线消息推送给用户
     //TextMessage returnMessage = new TextMessage("你将收到的离线");
     //session.sendMessage(returnMessage);
@@ -69,25 +69,23 @@ public class SpringWebSocketHandler  extends TextWebSocketHandler {
    * @method sendMessageToUser
    * @author JG
    * @date 2018/11/27 16:33
-   * @param [userName, message]
-   * @param [userName, message]
    * @return void
    * @since V1.0.0
    * @version V1.0.0
    */
   public void sendMessageToUser(String userName, TextMessage message) {
-    for (WebSocketSession user : users) {
-      if (user.getAttributes().get("WEBSOCKET_USERNAME").equals(userName)) {
-        try {
-          if (user.isOpen()) {
-            user.sendMessage(message);
-          }
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        break;
-      }
-    }
+//    for (WebSocketSession user : users) {
+//      if (user.getAttributes().get("WEBSOCKET_USERNAME").equals(userName)) {
+//        try {
+//          if (user.isOpen()) {
+//            user.sendMessage(message);
+//          }
+//        } catch (IOException e) {
+//          e.printStackTrace();
+//        }
+//        break;
+//      }
+//    }
   }
 
   /**
@@ -101,15 +99,15 @@ public class SpringWebSocketHandler  extends TextWebSocketHandler {
    * @version V1.0.0
    */
   public void sendMessageToUsers(TextMessage message) {
-    for (WebSocketSession user : users) {
-      try {
-        if (user.isOpen()) {
-          user.sendMessage(message);
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
+//    for (WebSocketSession user : users) {
+//      try {
+//        if (user.isOpen()) {
+//          user.sendMessage(message);
+//        }
+//      } catch (IOException e) {
+//        e.printStackTrace();
+//      }
+//    }
   }
 
 }
