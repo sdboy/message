@@ -49,9 +49,8 @@
         alert("连接失败!");
       }
     }
-
-    window.close=function() {
-      websocket.onclose();
+    window.onbeforeunload = function () {
+      websocket.close();
     }
   </script>
 </body>
