@@ -22,7 +22,7 @@ import javax.jms.Session;
  * @date 2018/11/26 14:47
  * @see
  */
-@Configuration
+//@Configuration
 public class PeopleFlowConfig {
 
   /**
