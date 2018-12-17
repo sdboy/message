@@ -20,6 +20,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
+@Configuration
+/**
+ * 不使用就需要注解掉，如果配置了启用注解注释，就必须要配置cacheManager 否则就会启动报错。
+ * 因为配置了这个缓存拦截器就会去注入cacheManager
+ */
+@EnableCaching
+
 /**
  * <p></p>
  *
@@ -28,12 +35,6 @@ import java.time.Duration;
  * @date 2018/12/14 15:49
  * @see
  */
-@Configuration
-/**
- * 不使用就需要注解掉，如果配置了启用注解注释，就必须要配置cacheManager 否则就会启动报错。
- * 因为配置了这个缓存拦截器就会去注入cacheManager
- */
-@EnableCaching
 public class RedisClientConfig {
 
   @Value(value = "${redis.maxIdle}")
