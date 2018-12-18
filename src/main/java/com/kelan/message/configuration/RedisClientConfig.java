@@ -176,7 +176,6 @@ public class RedisClientConfig {
    * @method cacheManager
    * @author JG
    * @date 2018/12/18 10:42
-   * @param []
    * @return org.springframework.cache.CacheManager
    * @since V1.0.0
    * @version V1.0.0

@@ -10,58 +10,39 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml","classpath:spring/spring-servlet.xml"})
 @Transactional(transactionManager = "transactionManager")
 @Rollback(value = true)
-public class QuartzServiceTest {
+
+public class RedisServiceTest {
 
   @Autowired
-  private QuartzService quartzService;
+  private RedisService redisService;
 
   @Ignore
   @Rollback(value = false)
-  public void addJob() {
-    try{
-      Class cls = Class.forName("com.kelan.message.job.HelloWorld");
-      quartzService.addJob("job2", "jGroup2", "trigger2", "tGroup2",
-          cls, "10/5 * * * * ?");
-    }catch (ClassNotFoundException e) {
-      e.printStackTrace();
+  public void operateRedis() {
+    List<String> list = new ArrayList<>();
+    list.add("c");
+    list.add("c++");
+    list.add("java");
+    list.add("javascript");
+    list.add("python");
+    redisService.operateRedis("language", list);
+  }
+
+  @Ignore
+  public void getValueList() {
+    List<Object> objectList = redisService.getValueList("language");
+    for(Object object: objectList) {
+      System.out.println(object.toString());
     }
-  }
-
-  @Ignore
-  public void modifyJobTime() {
-  }
-
-  @Ignore
-  public void modifyJobTime1() {
-  }
-
-  @Test
-  @Rollback(value = false)
-  public void pauseJob() {
-    quartzService.pauseJob("job2", "jGroup2");
-  }
-
-  @Test
-  @Rollback(value = false)
-  public void resumeJob() {
-    quartzService.resumeJob("job2", "jGroup2");
-  }
-
-  @Ignore
-  public void removeJob() {
-  }
-
-  @Ignore
-  public void startSchedule() {
-  }
-
-  @Ignore
-  public void shutdownSchedule() {
   }
 }
