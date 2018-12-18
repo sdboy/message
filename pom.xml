@@ -340,12 +340,14 @@
       <scope>test</scope>
     </dependency>
     <!-- redis end -->
+    <!-- websocket test -->
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-websocket</artifactId>
       <version>7.0.77</version>
       <scope>test</scope>
     </dependency>
+    <!-- websocket test -->
   </dependencies>
   <build>
     <finalName>message</finalName>
