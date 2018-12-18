@@ -142,9 +142,18 @@ public class RedisClientConfig {
     return new GenericFastJsonRedisSerializer();
   }
 
+  /**
+   * <p>配置redis模板</p>
+   * @method redisTemplate
+   * @author JG
+   * @date 2018/12/18 10:41
+   * @return org.springframework.data.redis.core.RedisTemplate<java.lang.String,java.lang.Object>
+   * @since V1.0.0
+   * @version V1.0.0
+   */
   @Bean
-  public RedisTemplate<Object, Object> redisTemplate() {
-    RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+  public RedisTemplate<String, Object> redisTemplate() {
+    RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
     redisTemplate.setEnableTransactionSupport(true);
     redisTemplate.setKeySerializer(stringRedisSerializer());
     redisTemplate.setValueSerializer(genericFastJsonRedisSerializer());
@@ -162,6 +171,16 @@ public class RedisClientConfig {
     return stringRedisTemplate;
   }
 
+  /**
+   * <p>配置cacheManager</p>
+   * @method cacheManager
+   * @author JG
+   * @date 2018/12/18 10:42
+   * @param []
+   * @return org.springframework.cache.CacheManager
+   * @since V1.0.0
+   * @version V1.0.0
+   */
   @Bean
   public CacheManager cacheManager() {
     RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().
