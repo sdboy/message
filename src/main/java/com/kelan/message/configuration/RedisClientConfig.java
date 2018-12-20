@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
+import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -43,12 +45,20 @@ public class RedisClientConfig {
   private int maxTotal;
   @Value(value = "${redis.minIdle}")
   private int minIdle;
+  @Value(value = "${redis.maxWaitMillis}")
+  private long maxWaitMillis;
+  @Value(value = "${redis.testOnBorrow}")
+  private boolean testOnBorrow;
   @Value(value = "${redis.hostname}")
   private String hostName;
   @Value(value = "${redis.port}")
   private int port;
   @Value(value = "${redis.password}")
   private String password;
+  @Value(value = "${redis.maxRedirects}")
+  private int maxRedirects;
+  @Value(value = "${redis.clusterNodes}")
+  private String clusterNodes;
 
   /**
    * <p>genericObjectPoolConfig common-pool2线程池</p>
@@ -65,6 +75,8 @@ public class RedisClientConfig {
     poolConfig.setMaxIdle(maxIdle);
     poolConfig.setMaxTotal(maxTotal);
     poolConfig.setMinIdle(minIdle);
+    poolConfig.setMaxWaitMillis(maxWaitMillis);
+    poolConfig.setTestOnBorrow(testOnBorrow);
     return poolConfig;
   }
 
@@ -101,6 +113,29 @@ public class RedisClientConfig {
   }
 
   /**
+   * <p>练级redis集群</p>
+   * @method redisClusterConfiguration
+   * @author JG
+   * @date 2018/12/20 14:54
+   * @return org.springframework.data.redis.connection.RedisClusterConfiguration
+   * @since V1.0.0
+   * @version V1.0.0
+   */
+  @Bean
+  public RedisClusterConfiguration redisClusterConfiguration() {
+    RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
+    redisClusterConfiguration.setMaxRedirects(maxRedirects);
+    String[] nodes = clusterNodes.split(",");
+    for(String node: nodes) {
+      String[] host = node.split(":");
+      RedisNode redisNode = new RedisNode(host[0], Integer.parseInt(host[1]));
+      redisClusterConfiguration.addClusterNode(redisNode);
+    }
+    redisClusterConfiguration.setPassword(password);
+    return redisClusterConfiguration;
+  }
+
+  /**
    * <p>配置连接工厂</p>
    * @method lettuceConnectionFactory
    * @author JG
@@ -111,7 +146,7 @@ public class RedisClientConfig {
    */
   @Bean
   public LettuceConnectionFactory lettuceConnectionFactory() {
-    return new LettuceConnectionFactory(redisStandaloneConfiguration(), lettuceClientConfiguration());
+    return new LettuceConnectionFactory(redisClusterConfiguration(), lettuceClientConfiguration());
   }
 
   /**
@@ -154,7 +189,8 @@ public class RedisClientConfig {
   @Bean
   public RedisTemplate<String, Object> redisTemplate() {
     RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-    redisTemplate.setEnableTransactionSupport(true);
+    // 事务支持，redis集群模式要关掉
+    redisTemplate.setEnableTransactionSupport(false);
     redisTemplate.setKeySerializer(stringRedisSerializer());
     redisTemplate.setValueSerializer(genericFastJsonRedisSerializer());
     redisTemplate.setHashKeySerializer(stringRedisSerializer());
