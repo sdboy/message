@@ -177,9 +177,9 @@
       <version>1.1.10</version>
     </dependency>
     <dependency>
-      <groupId>com.oracle</groupId>
+      <groupId>com.oracle.jdbc</groupId>
       <artifactId>ojdbc8</artifactId>
-      <version>12.2.0</version>
+      <version>12.2.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -394,4 +394,25 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <repositories>
+    <repository>
+      <id>maven.oracle.com</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>https://maven.oracle.com</url>
+      <layout>default</layout>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>maven.oracle.com</id>
+      <url>https://maven.oracle.com</url>
+    </pluginRepository>
+  </pluginRepositories>
+
 </project>
