@@ -75,6 +75,7 @@ public class PeopleFlowConfig {
   public ActiveMQConnectionFactory peopleFlowConnectionFactory() {
     ActiveMQConnectionFactory mqConnectionFactory = new ActiveMQConnectionFactory();
     mqConnectionFactory.setBrokerURL(url);
+    mqConnectionFactory.setUseAsyncSend(true);
     return mqConnectionFactory;
   }
 
